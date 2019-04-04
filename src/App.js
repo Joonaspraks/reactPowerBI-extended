@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <Report
-        // id={config.reportId} Unnecessary?
+        id={config.reportId} // Unnecessary?
         embedUrl={config.embedURL}
         accessToken={config.token}
         filterPaneEnabled={false} // typo error-handling?
