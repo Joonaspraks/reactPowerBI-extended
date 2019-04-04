@@ -9,7 +9,7 @@ const powerbi = new pbi.service.Service(
 	pbi.factories.routerFactory)
 
 const embedTypes = {
-	report:"report"
+	report: "report"
 }
 
 export default function Embedder(props) {
@@ -22,9 +22,9 @@ export default function Embedder(props) {
 	useEffect(() => {
 		validateConfig();
 		component = embed();
-		
+
 		//Asendab componentDidUnMounti
-		return function cleanUp(){
+		return function cleanUp() {
 			powerbi.reset(rootElement)
 			component = null
 		}
@@ -72,11 +72,11 @@ export default function Embedder(props) {
 
 	function validateConfig() {
 		let errors;
-		if(props.config.type===embedTypes.report) {
+		if (props.config.type === embedTypes.report) {
 			errors = pbi.models.validateReportLoad(props.config);
 		}
 		// const errors = undefined
-		if(errors) throw Error(errors[0].message)
+		if (errors) throw Error(errors[0].message)
 	}
 
 	function getFilters(report) {
@@ -109,22 +109,20 @@ export default function Embedder(props) {
 			})
 	}
 
-	function render() {
-		const dimensions = {
-			width: props.dimensions.width,
-			height: props.dimensions.height
-		}
-
-		return (
-
-			<div>
-				<div className='powerbi-frame' ref={(el) => {
-					rootElement = el
-				}} style={dimensions}/>
-				<button onClick={() => getFilters(component)}>Get filters</button>
-				<button onClick={() => removeFilters(component)}>Remove filters</button>
-				<button onClick={() => setFilters(component)}>Set filters</button>
-			</div>
-		)
+	const dimensions = {
+		width: props.dimensions.width,
+		height: props.dimensions.height
 	}
+
+	return (
+		<div>
+			<div className='powerbi-frame'
+			     ref={(el) => {
+				     rootElement = el
+			     }} style={dimensions}/>
+			<button onClick={() => getFilters(component)}>Get filters</button>
+			<button onClick={() => removeFilters(component)}>Remove filters</button>
+			<button onClick={() => setFilters(component)}>Set filters</button>
+		</div>
+	)
 }
