@@ -7,14 +7,13 @@ function App() {
   return (
     <div className="App">
       <Report
-        id={config.reportId}
+        // id={config.reportId} Unnecessary?
         embedUrl={config.embedURL}
         accessToken={config.token}
-        filterPaneEnabled={false}
+        filterPaneEnabled={false} // typo error-handling?
         navContentPaneEnabled={false}
-        embedType="report"
         height="900px"
-        tokenType={1}
+        tokenType={1} // Good error-handling here
       />
     </div>
   );
