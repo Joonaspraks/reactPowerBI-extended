@@ -1,22 +1,27 @@
-import React from 'react';
+/* eslint-disable */
+import React, {useState} from 'react';
 // import {PowerbiEmbedded}/* , { IFilter } */ from 'react-powerbi';
-import { Report } from './react-powerbi/index';
+import {Report} from './react-powerbi/index';
 import config from './config.json';
 
 function App() {
-  return (
-    <div className="App">
-      <Report
-        id={config.reportId} // Unnecessary?
-        embedUrl={config.embedURL}
-        accessToken={config.token}
-        filterPaneEnabled={false} // typo error-handling?
-        navContentPaneEnabled={false}
-        height="900px"
-        tokenType={1} // Good error-handling here
-      />
-    </div>
-  );
+    const [width, changeWidth] = useState(900);
+    return (
+        <div>
+            <div className="App" style={{width: "1600px", height:"900px", position:"relative"}}>
+                <Report
+                    id={config.reportId} // Unnecessary?
+                    embedUrl={config.embedURL}
+                    accessToken={config.token}
+                    filterPaneEnabled={false} // typo error-handling?
+                    navContentPaneEnabled={false}
+                    height={width + "px"}
+                    tokenType={1} // Good error-handling here
+                />
+            </div>
+            <button onClick={() => changeWidth(width === 900 ? 600 : 900)}>Change Width</button>
+        </div>
+    );
 }
 
 export default App;

@@ -1,12 +1,13 @@
 /* eslint-disable */
-import React from 'react';
+import React, {useState} from 'react';
 import Embedder from './Embedder';
 
 export default function Report(props) {
 
+	const [display, changeDisplay] = useState(true);
+	
 	const dimensions = {
-		height: props.height,
-		width: props.width
+		position: "relative"
 	};
 
 	const config = {
@@ -26,16 +27,16 @@ export default function Report(props) {
 			// layoutType: this.props.mobile ? pbi.models.LayoutType.MobilePortrait : undefined
 		}
 	};
-
-	/*	function throwError(errors){
-			throw errors[0].message
-		}*/
-
+	
 	return (
 		<div>
-			<Embedder config={config} dimensions={dimensions}/>
+			{display &&
+			<Embedder config={config} />
+			}
+			< button onClick={()=>changeDisplay(!display)}>Remove Report</button>
+
 		</div>
-		
+
 	)
 
 }
