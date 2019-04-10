@@ -25,6 +25,10 @@ export default function Report(props) {
 			filterPaneEnabled: props.filterPaneEnabled,
 			navContentPaneEnabled: props.navContentPaneEnabled,
 			// layoutType: this.props.mobile ? pbi.models.LayoutType.MobilePortrait : undefined
+			localeSettings: {
+				language: props.language,
+				formatLocale: "es"
+			}
 		}
 	};
 	

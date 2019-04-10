@@ -1,27 +1,48 @@
 /* eslint-disable */
 import React, {useState} from 'react';
 // import {PowerbiEmbedded}/* , { IFilter } */ from 'react-powerbi';
-import {Report} from './react-powerbi/index';
+import {Report, setFilters} from './react-powerbi/index';
 import config from './config.json';
+import * as pbi from 'powerbi-client'
 
 function App() {
-    const [width, changeWidth] = useState(900);
-    return (
-        <div>
-            <div className="App" style={{width: "1600px", height:"900px", position:"relative"}}>
-                <Report
-                    id={config.reportId} // Unnecessary?
-                    embedUrl={config.embedURL}
-                    accessToken={config.token}
-                    filterPaneEnabled={false} // typo error-handling?
-                    navContentPaneEnabled={false}
-                    height={width + "px"}
-                    tokenType={1} // Good error-handling here
-                />
-            </div>
-            <button onClick={() => changeWidth(width === 900 ? 600 : 900)}>Change Width</button>
-        </div>
-    );
+	const filter = {
+		$schema: "http://powerbi.com/product/schema#basic",
+		target: {
+			table: "States",
+			column: "Region"
+		},
+		operator: "In",
+		values: ["CENTRAL", "EAST"],
+		filterType: 1,
+	};
+	return (
+		<div>
+			<div className="App" style={{width: "1600px", height: "900px", position: "relative"}}>
+				<Report
+					id={config.reportId} // Unnecessary?
+					embedUrl={config.embedURL}
+					accessToken={config.token}
+					filterPaneEnabled={true} // typo error-handling?
+					navContentPaneEnabled={false}
+					tokenType={1} // Good error-handling here
+					filters={[filter]}
+					language={'et'}
+				/>
+			</div>
+			{/*Selline lähenemine paneb komponendi uuesti renderdama*/}
+			<button onClick={() => setFilters({
+				$schema: "http://powerbi.com/product/schema#basic",
+				target: {
+					table: "States",
+					column: "Region"
+				},
+				operator: "In",
+				values: ["EAST"],
+				filterType: 1
+			})}>Change Filter</button>
+		</div>
+	);
 }
 
 export default App;

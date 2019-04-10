@@ -12,10 +12,20 @@ const powerBI = new pbi.service.Service(
 const embedTypes = {
 	report: "report"
 }
+let component = null
+export function setFilters(filter) {
+
+	const array = [filter]
+
+	component.setFilters(array)
+		.catch(errors => {
+			console.log(errors)
+		})
+}
 
 export default function Embedder(props) {
 
-	let component = null
+	
 	let rootElement = null
 
 	// Vajalik, et enne refi püstitamist välja ei kutsutaks.
@@ -53,36 +63,19 @@ export default function Embedder(props) {
 		report.removeFilters()
 	}
 
-	function setFilters(report) {
-		const basicFilter = {
-			$schema: "http://powerbi.com/product/schema#basic",
-			target: {
-				table: "States",
-				column: "Region"
-			},
-			operator: "In",
-			values: ["CENTRAL", "EAST"],
-			filterType: pbi.models.FilterType.Basic
-		}
-
-		const array = [basicFilter]
-
-		report.setFilters(array)
-			.catch(errors => {
-				console.log(errors)
-			})
-	}
 	{/*			<button onClick={() => getFilters(component)}>Get filters</button>
 			<button onClick={() => removeFilters(component)}>Remove filters</button>
 			<button onClick={() => setFilters(component)}>Set filters</button>
-		</div>*/}
+		</div>*/
+	}
 
 	return (
 		//<div>
-			<div className='powerbi-frame'
-			     ref={(el) => {
-				     rootElement = el
-			     }} style={{left: 0, right: 0, top: 0, bottom: 0, position: "absolute"}}/>
+		<div className='powerbi-frame'
+		     ref={(el) => {
+			     rootElement = el
+		     }} style={{left: 0, right: 0, top: 0, bottom: 0, position: "absolute"}}
+		/>
 
 	)
 }
