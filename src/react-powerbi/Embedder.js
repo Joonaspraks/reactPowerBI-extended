@@ -13,6 +13,7 @@ const embedTypes = {
 	report: "report"
 }
 let component = null
+
 export function setFilters(filter) {
 
 	const array = [filter]
@@ -23,35 +24,72 @@ export function setFilters(filter) {
 		})
 }
 
+export function setPage(){
+	component.getPages().then(pages => {
+		pages.forEach(page => {
+			if(page.name==="ReportSection"){
+				page.setActive();
+			}
+		})
+	});
+}
+
+export function getBookMarks() {
+	console.log(component.bookmarksManager.getBookmarks())
+}
+
 export default function Embedder(props) {
 
-	
+	const validateConfig = () => {
+		let errors;
+		if (props.config.type === embedTypes.report) {
+			errors = pbi.models.validateReportLoad(props.config);
+		}
+		if (errors) throw Error(errors[0].message)
+
+	}
+
+	function embed() {
+		return powerBI.embed(rootElement, props.config)
+	}
+
+
+	function load() {
+		return powerBI.load(rootElement, props.config)
+	}
+
 	let rootElement = null
 
 	// Vajalik, et enne refi püstitamist välja ei kutsutaks.
 	//Asendab componentDidMounti
 	useEffect(() => {
 		validateConfig();
-		component = embed();
+		component = load();
 
-		//Asendab componentDidUnMounti
-		return function cleanUp() {
-			// powerBI.reset(rootElement)
-			component = null
-		}
+		// component.bookmarksManager.apply("Bookmark5a5f49bbea1bfb0c241d");
+		component.on('loaded', () => {
+			/*			console.log(component.bookmarksManager.getBookmarks());
+						component.bookmarksManager.getBookmarks().then(
+							result => result.forEach((bookmark) => {
+								console.log(bookmark);
+								console.log(props.bookmark.name);
+								if (bookmark.displayName === props.bookmark.name) {
+									component.bookmarksManager.apply(bookmark.name);
+									component.render();
+								}
+							}));*/
+			console.log(component.bookmarksManager)
+			component.getPages().then(pages => {
+				pages.forEach(page => {
+					if(page.name==="ReportSection"){
+						component.render();
+						page.setActive();
+					}
+				})
+			});
+		});
 	})
-
-	function embed() {
-		return powerBI.embed(rootElement, props.config)
-	}
-
-	function validateConfig() {
-		let errors;
-		if (props.config.type === embedTypes.report) {
-			errors = pbi.models.validateReportLoad(props.config);
-		}
-		if (errors) throw Error(errors[0].message)
-	}
+	;
 
 	function getFilters(report) {
 		report.getFilters().then(filters => {
@@ -70,7 +108,7 @@ export default function Embedder(props) {
 	}
 
 	return (
-		//<div>
+
 		<div className='powerbi-frame'
 		     ref={(el) => {
 			     rootElement = el

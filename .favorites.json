@@ -1,0 +1,20 @@
+[
+    {
+        "type": "Directory",
+        "name": "c:\\Users\\joonas.praks\\Desktop\\pbi-js-extended\\node_modules\\react-powerbi",
+        "parent_id": null,
+        "fsPath": "c:\\Users\\joonas.praks\\Desktop\\pbi-js-extended\\node_modules\\react-powerbi",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "mLguwDbMZndi98yF"
+    },
+    {
+        "type": "Directory",
+        "name": "c:\\Users\\joonas.praks\\Desktop\\pbi-js-extended\\src",
+        "parent_id": null,
+        "fsPath": "c:\\Users\\joonas.praks\\Desktop\\pbi-js-extended\\src",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "ACdzuG2kWOLNK9Fx"
+    }
+]

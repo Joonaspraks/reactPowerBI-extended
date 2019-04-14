@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, {useState} from 'react';
 // import {PowerbiEmbedded}/* , { IFilter } */ from 'react-powerbi';
-import {Report, setFilters} from './react-powerbi/index';
+import {Report, setFilters, getBookMarks, setPage} from './react-powerbi/index';
 import config from './config.json';
 import * as pbi from 'powerbi-client'
 
@@ -23,11 +23,13 @@ function App() {
 					id={config.reportId} // Unnecessary?
 					embedUrl={config.embedURL}
 					accessToken={config.token}
+					bookmark={{name:"DemoReportBookMark"}}
 					filterPaneEnabled={true} // typo error-handling?
 					navContentPaneEnabled={false}
 					tokenType={1} // Good error-handling here
-					filters={[filter]}
+					// filters={[filter]}
 					language={'et'}
+					visible={true}
 				/>
 			</div>
 			{/*Selline lähenemine paneb komponendi uuesti renderdama*/}
@@ -41,6 +43,8 @@ function App() {
 				values: ["EAST"],
 				filterType: 1
 			})}>Change Filter</button>
+			<button onClick={getBookMarks}>Get all bookmarks!</button>
+			<button onClick={setPage}>Set new page</button>
 		</div>
 	);
 }

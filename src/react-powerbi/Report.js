@@ -10,9 +10,10 @@ export default function Report(props) {
 		position: "relative"
 	};
 
+	const bookmark = props.bookmark;
 	const config = {
 		accessToken: props.accessToken,
-		bookmark: props.bookmark,
+		// bookmark: props.bookmark,
 		filters: props.filters,
 		id: props.id,
 		pageName: props.pageName,
@@ -28,6 +29,16 @@ export default function Report(props) {
 			localeSettings: {
 				language: props.language,
 				formatLocale: "es"
+			},
+			visualSettings: {
+				visualHeaders: [
+					{
+						settings: {
+							visible: props.visible
+						}
+						/* No selector - Hide visual header for all the visuals in the report */
+					}
+				]
 			}
 		}
 	};
@@ -35,7 +46,7 @@ export default function Report(props) {
 	return (
 		<div>
 			{display &&
-			<Embedder config={config} />
+			<Embedder config={config} bookmark={bookmark} />
 			}
 			< button onClick={()=>changeDisplay(!display)}>Remove Report</button>
 
