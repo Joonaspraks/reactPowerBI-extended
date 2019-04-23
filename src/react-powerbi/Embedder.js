@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as pbi from 'powerbi-client'
 
 //Mingi etem viis objekti loomiseks?
@@ -10,65 +10,102 @@ const powerBI = new pbi.service.Service(
 	pbi.factories.routerFactory)
 
 const embedTypes = {
-	report: "report"
-}
-let component = null
+	report: "report",
+	dashboard: "dashboard",
+	tiles: "tiles"
+};
+let component = undefined;
 
-export function setFilters(filter) {
+export function setFilters(filters) {
 
-	const array = [filter]
-
-	component.setFilters(array)
+	component.setFilters(filters)
 		.catch(errors => {
 			console.log(errors)
 		})
 }
 
-export function setPage(){
-	component.getPages().then(pages => {
-		pages.forEach(page => {
-			if(page.name==="ReportSection"){
-				page.setActive();
-			}
-		})
-	});
+export function isVisualDefined(){
+	return !!component;
+}
+
+export function getFilters() {
+	if(isVisualDefined())
+		console.log(component.getFilters());
+}
+
+export function getPages(){
+	if(isVisualDefined())
+		return component.getPages();
+}
+
+export function setPage(pageName){
+	if(isVisualDefined()) {
+		component.getPages().then(pages => {
+			pages.forEach(page => {
+				if (page.name === pageName) {
+					page.setActive();
+				}
+			})
+		});
+	}
 }
 
 export function getBookMarks() {
-	console.log(component.bookmarksManager.getBookmarks())
+	if(isVisualDefined())
+		console.log(component.bookmarksManager.getBookmarks())
+}
+
+export function removeFilters(report) {
+	if(isVisualDefined())
+		report.removeFilters()
+}
+
+export function showBookMarks() {
+	if(isVisualDefined()) {
+		component.bookmarksManager.updateSettings({
+			bookmarksPaneEnabled: true
+		});
+	}
 }
 
 export default function Embedder(props) {
+
+	const [isHidden, setIsHidden]=useState(props.hideLoadingIcon);
+	let rootElement = null;
 
 	const validateConfig = () => {
 		let errors;
 		if (props.config.type === embedTypes.report) {
 			errors = pbi.models.validateReportLoad(props.config);
 		}
+		else if (props.config.type === embedTypes.dashboard) {
+			errors = pbi.models.validateDashboardLoad(props.config);
+		}
 		if (errors) throw Error(errors[0].message)
 
-	}
+	};
 
 	function embed() {
 		return powerBI.embed(rootElement, props.config)
 	}
 
 
-	function load() {
+/*	function load() {
 		return powerBI.load(rootElement, props.config)
-	}
-
-	let rootElement = null
+	}*/
 
 	// Vajalik, et enne refi püstitamist välja ei kutsutaks.
 	//Asendab componentDidMounti
 	useEffect(() => {
 		validateConfig();
-		component = load();
+		component = embed();
 
+		component.on('loaded', ()=>{
+			setIsHidden(false);
+		})
 		// component.bookmarksManager.apply("Bookmark5a5f49bbea1bfb0c241d");
-		component.on('loaded', () => {
-			/*			console.log(component.bookmarksManager.getBookmarks());
+		/*component.on('loaded', () => {
+						console.log(component.bookmarksManager.getBookmarks());
 						component.bookmarksManager.getBookmarks().then(
 							result => result.forEach((bookmark) => {
 								console.log(bookmark);
@@ -77,7 +114,7 @@ export default function Embedder(props) {
 									component.bookmarksManager.apply(bookmark.name);
 									component.render();
 								}
-							}));*/
+							}));
 			console.log(component.bookmarksManager)
 			component.getPages().then(pages => {
 				pages.forEach(page => {
@@ -87,19 +124,9 @@ export default function Embedder(props) {
 					}
 				})
 			});
-		});
+		});*/
 	})
 	;
-
-	function getFilters(report) {
-		report.getFilters().then(filters => {
-			filters.forEach(coolFilter => console.log(coolFilter))
-		})
-	}
-
-	function removeFilters(report) {
-		report.removeFilters()
-	}
 
 	{/*			<button onClick={() => getFilters(component)}>Get filters</button>
 			<button onClick={() => removeFilters(component)}>Remove filters</button>
@@ -109,7 +136,7 @@ export default function Embedder(props) {
 
 	return (
 
-		<div className='powerbi-frame'
+		<div hidden={isHidden} className='powerbi-frame'
 		     ref={(el) => {
 			     rootElement = el
 		     }} style={{left: 0, right: 0, top: 0, bottom: 0, position: "absolute"}}

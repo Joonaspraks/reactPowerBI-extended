@@ -3,14 +3,15 @@
 import React from 'react'
 import Embedder from './Embedder'
 
-export default function Dashboard(props) {
+export default function Tile(props) {
 
 	const config = {
 		accessToken: props.accessToken,
 		id: props.id,
 		tokenType: props.tokenType,
-		type: "dashboard", // not part of IReport
-		embedUrl: props.embedUrl // not part of IReport
+		type: "tile", // not part of IReport
+		embedUrl: props.embedUrl, // not part of IReport
+		dashboardId: props.dashboardId
 	}
 
 	return (

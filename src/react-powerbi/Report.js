@@ -11,6 +11,7 @@ export default function Report(props) {
 	};
 
 	const bookmark = props.bookmark;
+	const hideLoadingIcon = props.hideLoadingIcon;
 	const config = {
 		accessToken: props.accessToken,
 		// bookmark: props.bookmark,
@@ -25,6 +26,7 @@ export default function Report(props) {
 		settings: {
 			filterPaneEnabled: props.filterPaneEnabled,
 			navContentPaneEnabled: props.navContentPaneEnabled,
+			bookmarksPaneEnabled: props.bookmarksPaneEnabled,
 			// layoutType: this.props.mobile ? pbi.models.LayoutType.MobilePortrait : undefined
 			localeSettings: {
 				language: props.language,
@@ -46,7 +48,7 @@ export default function Report(props) {
 	return (
 		<div>
 			{display &&
-			<Embedder config={config} bookmark={bookmark} />
+			<Embedder config={config} bookmark={bookmark} hideLoadingIcon={hideLoadingIcon} />
 			}
 			< button onClick={()=>changeDisplay(!display)}>Remove Report</button>
 

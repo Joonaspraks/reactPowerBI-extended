@@ -38,7 +38,7 @@ class PowerbiEmbedded extends React.Component {
   }
 
   embed (config) {
-    // this.component = powerbi.embed(this.rootElement, config)
+    // this.component = powerbi.embed(this.rootElement, configReport)
     this.component = powerbi.load(this.rootElement, config)
     const report = this.component
 

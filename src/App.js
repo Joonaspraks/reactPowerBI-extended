@@ -1,11 +1,16 @@
 /* eslint-disable */
 import React, {useState} from 'react';
 // import {PowerbiEmbedded}/* , { IFilter } */ from 'react-powerbi';
-import {Report, setFilters, getBookMarks, setPage} from './react-powerbi/index';
-import config from './config.json';
+import {Report, Dashboard, Tile, setFilters, getBookMarks, setPage, showBookMarks, getFilters} from './react-powerbi/index';
+import configReport from './configReport.json';
+import configDashboard from './configDashboard.json';
+import configDashboardDemo from './configDashboardDemo.json';
+import configTileDemo from './configTileDemo.json';
+import configTile from './configTile.json';
 import * as pbi from 'powerbi-client'
 
 function App() {
+	const [loaded, isLoaded] = useState(false);
 	const filter = {
 		$schema: "http://powerbi.com/product/schema#basic",
 		target: {
@@ -19,17 +24,35 @@ function App() {
 	return (
 		<div>
 			<div className="App" style={{width: "1600px", height: "900px", position: "relative"}}>
-				<Report
-					id={config.reportId} // Unnecessary?
-					embedUrl={config.embedURL}
-					accessToken={config.token}
+				{/*<Report
+					id={configReport.id} // Unnecessary?
+					embedUrl={configReport.embedURL}
+					// pageName={"ReportSection"}
+					accessToken={configReport.token}
 					bookmark={{name:"DemoReportBookMark"}}
 					filterPaneEnabled={true} // typo error-handling?
 					navContentPaneEnabled={false}
 					tokenType={1} // Good error-handling here
+					bookmarksPaneEnabled={true}
 					// filters={[filter]}
 					language={'et'}
 					visible={true}
+					hideLoadingIcon={true}
+				/>*/}
+{/*				<Dashboard
+					id={configDashboardDemo.id} // Unnecessary?
+					embedUrl={configDashboardDemo.embedURL}
+					// pageName={"ReportSection"}
+					accessToken={configDashboardDemo.token}
+					tokenType={1} // Good error-handling here
+				/>*/}
+				<Tile
+					id={configTile.id} // Unnecessary?
+					embedUrl={configTile.embedURL}
+					// pageName={"ReportSection"}
+					accessToken={configTile.token}
+					tokenType={1} // Good error-handling here
+					dashboardId={configTile.dashboardId}
 				/>
 			</div>
 			{/*Selline lähenemine paneb komponendi uuesti renderdama*/}
@@ -43,45 +66,14 @@ function App() {
 				values: ["EAST"],
 				filterType: 1
 			})}>Change Filter</button>
+			<button onClick={getFilters}>Get all filters!</button>
 			<button onClick={getBookMarks}>Get all bookmarks!</button>
-			<button onClick={setPage}>Set new page</button>
+			<button onClick={()=>setPage("ReportSection")}>Set new page</button>
+			<button onClick={showBookMarks}>Show bookmark pane</button>
 		</div>
 	);
 }
 
 export default App;
 
-/* let token = '';
 
-let url = 'https://login.windows.net/common/oauth2/token';
-fetch(url, {
-  method: 'POST', // *GET, POST, PUT, DELETE, etc.
-  mode: 'cors', // no-cors, cors, *same-origin
-  headers: {
-    'Content-Type': 'application/json',
-    // "Content-Type": "application/x-www-form-urlencoded",
-  },
-  body: JSON.stringify({
-    client_id: '4c048f3c-4568-44d8-9918-acd503103cc9',
-    grant_type: 'password',
-    resource: 'https://analysis.windows.net/powerbi/api',
-    username: 'joonas.praks@profitsoftware.com',
-    password: 'Evakorter1502',
-  }), // body data type must match "Content-Type" header
-}).then((response) => {
-  url = 'https://api.powerbi.com/v1.0/myorg/groups/d57985a4-319c-4708-a658-14cf9e5e0bd6/reports/42787bd9-140f-44ed-b0b2-9f3b4279429f/GenerateToken';
-  fetch(url, {
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    mode: 'cors', // no-cors, cors, *same-origin
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${response.access_token}`,
-      // "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: JSON.stringify({
-      accessLevel: 'View',
-    }), // body data type must match "Content-Type" header
-  }).then((response2) => {
-    ({ token } = response2);
-  });
-}); */
