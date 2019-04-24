@@ -3,6 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import * as pbi from 'powerbi-client'
 
+//Mingi etem viis objekti loomiseks?
 const powerBI = new pbi.service.Service(
 	pbi.factories.hpmFactory,
 	pbi.factories.wpmpFactory,
@@ -15,10 +16,6 @@ const embedTypes = {
 };
 let component = undefined;
 
-function isVisualDefined() {
-	return !!component;
-}
-
 export function setFilters(filters) {
 
 	component.setFilters(filters)
@@ -27,9 +24,13 @@ export function setFilters(filters) {
 		})
 }
 
+export function isVisualDefined() {
+	return !!component;
+}
+
 export function getFilters() {
 	if (isVisualDefined())
-		return component.getFilters();
+		console.log(component.getFilters());
 }
 
 export function getPages() {
@@ -88,6 +89,13 @@ export default function Embedder(props) {
 		return powerBI.embed(rootElement, props.config)
 	}
 
+
+	/*	function load() {
+			return powerBI.load(rootElement, props.config)
+		}*/
+
+	// Vajalik, et enne refi püstitamist välja ei kutsutaks.
+	//Asendab componentDidMounti
 	useEffect(() => {
 		validateConfig();
 		component = embed();
@@ -95,8 +103,36 @@ export default function Embedder(props) {
 		component.on('loaded', () => {
 			setIsHidden(false);
 		})
+		// component.bookmarksManager.apply("Bookmark5a5f49bbea1bfb0c241d");
+		/*component.on('loaded', () => {
+						console.log(component.bookmarksManager.getBookmarks());
+						component.bookmarksManager.getBookmarks().then(
+							result => result.forEach((bookmark) => {
+								console.log(bookmark);
+								console.log(props.bookmark.name);
+								if (bookmark.displayName === props.bookmark.name) {
+									component.bookmarksManager.apply(bookmark.name);
+									component.render();
+								}
+							}));
+			console.log(component.bookmarksManager)
+			component.getPages().then(pages => {
+				pages.forEach(page => {
+					if(page.name==="ReportSection"){
+						component.render();
+						page.setActive();
+					}
+				})
+			});
+		});*/
 	})
 	;
+
+	{/*			<button onClick={() => getFilters(component)}>Get filters</button>
+			<button onClick={() => removeFilters(component)}>Remove filters</button>
+			<button onClick={() => setFilters(component)}>Set filters</button>
+		</div>*/
+	}
 
 	return (
 
